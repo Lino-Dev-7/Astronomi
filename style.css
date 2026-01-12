@@ -1,0 +1,1404 @@
+:root {
+    --bg-color: #050b14;
+    --text-primary: #ffffff;
+    --accent-color: #ffd700;
+    --neon-blue: #00f0ff;
+    --neon-glow: rgba(0, 240, 255, 0.5);
+
+    /* Planet Colors */
+    --sun-color: radial-gradient(circle, #ffd700, #ff8c00);
+    --mercury-color: #a9a9a9;
+    --venus-color: #e3bc79;
+    --earth-color: #4facfe;
+    --mars-color: #ff5f6d;
+    --jupiter-color: #d4a373;
+    --saturn-color: #f4e4ba;
+    --uranus-color: #7de2f0;
+    --neptune-color: #5b6cf9;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rajdhani', 'Fredoka', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    overflow: hidden;
+    /* Strict no-scroll */
+    width: 100vw;
+    height: 100vh;
+}
+
+/* --- LAYER 1: VISUAL VIEWPORT (Z-Index 0) --- */
+#visual-viewport {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+}
+
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+    z-index: -1;
+}
+
+#solar-system-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* In Home Mode: Blur slightly? No, user wants focus. */
+    transition: transform 1s, filter 1s;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2);
+        box-shadow: 0 0 4px white;
+    }
+}
+
+/* Blur solar system slightly when menu is active for cinematic feel? User didn't ask, but it's nice. */
+/* body:not(.explore-mode) #solar-system-container { filter: blur(2px) brightness(0.8); transform: scale(0.9); } */
+/* Reverting simple because user wants Clean. */
+
+.solar-system {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+    will-change: transform;
+}
+
+/* Solar System Components (Same as before) */
+.sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: var(--sun-color);
+    border-radius: 50%;
+    box-shadow: 0 0 50px #ff8c00;
+    z-index: 10;
+    cursor: pointer;
+    transition: filter 1s, transform 0.3s;
+}
+
+.orbit {
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: opacity 1s, filter 1s;
+}
+
+.planet {
+    position: absolute;
+    border-radius: 50%;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    pointer-events: auto;
+    /* Important: Clickable in Layer 1 */
+    box-shadow: inset -4px -4px 10px rgba(0, 0, 0, 0.8);
+}
+
+.planet:hover {
+    box-shadow: 0 0 20px white;
+    z-index: 100;
+}
+
+/* Planet Sizes */
+.orbit-mercury {
+    width: 140px;
+    height: 140px;
+    animation: spin 4s linear infinite;
+}
+
+.mercury {
+    width: 12px;
+    height: 12px;
+    background: var(--mercury-color);
+}
+
+.orbit-venus {
+    width: 220px;
+    height: 220px;
+    width: 220px;
+    height: 220px;
+}
+
+.venus {
+    width: 20px;
+    height: 20px;
+    background: var(--venus-color);
+}
+
+.orbit-earth {
+    width: 320px;
+    height: 320px;
+    width: 320px;
+    height: 320px;
+}
+
+.earth {
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle at 30% 30%, #4facfe, #00f2fe);
+}
+
+.moon-orbit {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.moon {
+    width: 4px;
+    height: 4px;
+    background: #ddd;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+}
+
+.orbit-mars {
+    width: 420px;
+    height: 420px;
+    width: 420px;
+    height: 420px;
+}
+
+.mars {
+    width: 18px;
+    height: 18px;
+    background: var(--mars-color);
+}
+
+.orbit-jupiter {
+    width: 600px;
+    height: 600px;
+    width: 600px;
+    height: 600px;
+}
+
+.jupiter {
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle at 30% 30%, #d4a373, #8d6e63);
+}
+
+.orbit-saturn {
+    width: 800px;
+    height: 800px;
+    width: 800px;
+    height: 800px;
+}
+
+.saturn {
+    width: 50px;
+    height: 50px;
+    background: var(--saturn-color);
+}
+
+.saturn-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70px;
+    height: 8px;
+    background: rgba(200, 200, 200, 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(-10deg);
+}
+
+.orbit-uranus {
+    width: 1000px;
+    height: 1000px;
+    width: 1000px;
+    height: 1000px;
+}
+
+.uranus {
+    width: 35px;
+    height: 35px;
+    background: var(--uranus-color);
+}
+
+.orbit-neptune {
+    width: 1200px;
+    height: 1200px;
+}
+
+.neptune {
+    width: 34px;
+    height: 34px;
+    background: var(--neptune-color);
+}
+
+
+
+/* Cinematic Focus States */
+.paused .orbit {
+    animation-play-state: paused;
+}
+
+body.view-focus .orbit:not(.focused-orbit) {
+    opacity: 0.1;
+    filter: blur(2px);
+}
+
+body.view-focus .sun {
+    opacity: 0.1;
+    filter: blur(5px);
+}
+
+.planet.focused-planet {
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+    animation: floating 6s ease-in-out infinite alternate !important;
+}
+
+@keyframes floating {
+    0% {
+        transform: translate(-50%, -50%) translateY(0);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) translateY(-5px);
+    }
+}
+
+
+/* --- LAYER 2: HOME UI LAYER (Home Page) --- */
+#home-ui-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    /* pointer-events default is auto, let children handle or block if needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out, visibility 0.8s;
+}
+
+/* EXPLORE MODE: Hide Home Layer */
+body.explore-mode #home-ui-layer {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transform: scale(1.1);
+}
+
+/* --- LAYER 2.5: SYSTEM UI LAYER (Persistent Controls) --- */
+#system-ui-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 15;
+    /* Above Home, Below HUD */
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    /* Ensure it is not clickable/visible when opacity is 0 */
+    transition: opacity 0.5s ease-in-out, visibility 0.5s;
+}
+
+/* EXPLORE MODE: Show System Layer */
+body.explore-mode #system-ui-layer {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* FOCUS MODE: Hide System Layer (Clean View) */
+body.view-focus #system-ui-layer {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+}
+
+/* Back Button (Now inside System Layer) */
+#back-to-menu-btn {
+    position: absolute;
+    /* Relative to system layer */
+    top: 20px;
+    left: 20px;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+#back-to-menu-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: scale(1.1);
+}
+
+
+#main-header {
+    text-align: center;
+    padding-top: 2rem;
+    pointer-events: auto;
+    /* Gradient backdrop for better readability */
+    background: radial-gradient(ellipse at top, rgba(0, 0, 0, 0.8), transparent 70%);
+}
+
+.logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    color: var(--neon-blue);
+    margin-bottom: 0.5rem;
+}
+
+#main-header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3rem;
+    color: white;
+    text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+    margin: 0;
+}
+
+/* Home Menu (Centered) */
+#home-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+    pointer-events: auto;
+}
+
+.menu-btn {
+    background: rgba(5, 20, 40, 0.6);
+    border: 1px solid var(--neon-blue);
+    padding: 15px 40px;
+    min-width: 250px;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.menu-btn:hover {
+    background: var(--neon-blue);
+    color: #000;
+    box-shadow: 0 0 40px rgba(0, 240, 255, 0.6);
+    transform: scale(1.05);
+}
+
+.menu-btn.secondary {
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #ccc;
+    font-size: 0.9rem;
+    padding: 12px 30px;
+    min-width: 200px;
+}
+
+.menu-btn.secondary:hover {
+    border-color: white;
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+footer {
+    text-align: center;
+    padding-bottom: 1rem;
+    pointer-events: auto;
+}
+
+footer p {
+    color: #888;
+    font-size: 0.8rem;
+}
+
+
+/* --- LAYER 3: CINEMATIC HUD (Z-Index 20) --- */
+.hud-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+    pointer-events: none;
+    display: flex;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+.hud-container.hidden {
+    display: none;
+}
+
+.hud-container.active .hud-left-panel {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Left Panel */
+.hud-left-panel {
+    width: 350px;
+    height: 100%;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0) 100%);
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateX(-50px);
+    transition: all 0.8s ease 0.5s;
+}
+
+/* Right Panel (Spacer) */
+.hud-right-panel {
+    flex-grow: 1;
+}
+
+.hud-header h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 3.5rem;
+    color: white;
+    line-height: 1;
+    margin-bottom: 0.2rem;
+}
+
+.hud-subtitle {
+    color: var(--neon-blue);
+    letter-spacing: 4px;
+    font-size: 1rem;
+}
+
+.hud-menu {
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.hud-btn {
+    background: rgba(0, 240, 255, 0.05);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    color: var(--neon-blue);
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    transition: all 0.3s;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.hud-btn:hover,
+.hud-btn.active {
+    background: rgba(0, 240, 255, 0.2);
+    border-color: var(--neon-blue);
+    padding-left: 25px;
+}
+
+.hud-content-box {
+    margin-bottom: 2rem;
+    min-height: 80px;
+    color: #ddd;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    border-left: 3px solid var(--accent-color);
+    padding-left: 1rem;
+}
+
+.control-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.control-btn:hover {
+    opacity: 1;
+}
+
+.icon-circle {
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+
+
+/* Responsive Landscape/Mobile */
+@media (max-width: 768px) {
+    #main-header h1 {
+        font-size: 1.8rem;
+    }
+
+    .hud-left-panel {
+        width: 100%;
+        height: 50%;
+        top: auto;
+        bottom: 0;
+        position: absolute;
+        background: linear-gradient(0deg, rgba(0, 0, 0, 0.95) 60%, rgba(0, 0, 0, 0) 100%);
+        padding-top: 3rem;
+        justify-content: flex-end;
+        padding-bottom: 1rem;
+    }
+
+    .hud-header h2 {
+        font-size: 2.5rem;
+    }
+
+    .hud-menu {
+        gap: 0.5rem;
+        margin: 1rem 0;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .hud-btn {
+        flex: 1;
+        justify-content: center;
+        font-size: 0.8rem;
+    }
+
+    .btn-arrow {
+        display: none;
+    }
+}
+
+/* --- TIME CONTROL PANEL --- */
+#time-panel-container {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    pointer-events: auto;
+    width: 90%;
+    max-width: 600px;
+}
+
+/* Removed old visibility hacks - now handled by parent #system-ui-layer */
+
+#time-display {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--neon-blue);
+    padding: 5px 20px;
+    border-radius: 20px;
+    color: var(--neon-blue);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+    display: flex;
+    gap: 10px;
+}
+
+#time-controls {
+    background: rgba(5, 20, 40, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.time-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    transition: all 0.2s;
+}
+
+.time-btn:hover {
+    background: var(--neon-blue);
+    color: black;
+    box-shadow: 0 0 15px var(--neon-blue);
+    border-color: transparent;
+}
+
+#time-speed {
+    width: auto;
+    padding: 0 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: bold;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #aaa;
+    font-size: 0.8rem;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    width: 150px;
+    background: transparent;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--neon-blue);
+    cursor: pointer;
+    margin-top: -6px;
+    box-shadow: 0 0 10px var(--neon-blue);
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+/* Landscape/Mobile Adjustments */
+@media (max-width: 768px) {
+    #time-panel-container {
+        width: 95%;
+        bottom: 80px;
+    }
+
+    #time-controls {
+        padding: 8px 15px;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    input[type=range] {
+        width: 100px;
+    }
+
+    .slider-container label {
+        display: none;
+    }
+}
+
+/* --- CRITICAL FIXES FOR PLANET INTERACTION (Layer 300) --- */
+/* Fix: Allow clicks to pass through the system UI container in explore mode */
+body.explore-mode #system-ui-layer {
+    pointer-events: none !important;
+}
+
+/* Fix: Ensure specific UI children remain interactive */
+#time-panel-container,
+#back-to-menu-btn {
+    pointer-events: auto;
+}
+
+/* Fix: Moon orbit container should not block Earth clicks */
+.moon-orbit {
+    pointer-events: none;
+}
+
+/* --- VISUAL POLISH (Layer 400 - Add Only) --- */
+
+/* 1. Camera Drift Animation */
+@keyframes subtle-drift {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    25% {
+        transform: translate(-30px, 15px);
+    }
+
+    50% {
+        transform: translate(-15px, -30px);
+    }
+
+    75% {
+        transform: translate(15px, -15px);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+.camera-drift {
+    animation: subtle-drift 60s ease-in-out infinite;
+    will-change: transform;
+}
+
+/* --- UX ENHANCEMENTS (Layer 500 - Add Only) --- */
+
+/* 1. Year Speed Button */
+#time-speed-year {
+    width: auto;
+    padding: 0 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: bold;
+    border: 1px solid var(--neon-blue);
+    background: rgba(0, 240, 255, 0.1);
+}
+
+/* 2. Vertical System Panning */
+#solar-system-container {
+    transform: translateY(var(--system-y-offset, 0)) scale(var(--system-zoom, 1));
+    will-change: transform;
+}
+
+
+/* 2. Interactive Highlights */
+.orbit:hover {
+    border-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    /* Suggest interaction */
+}
+
+.planet:hover {
+    filter: drop-shadow(0 0 10px white) brightness(1.2);
+    /* Make it pop slightly */
+    transform: translate(-50%, -50%) scale(1.2);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1000;
+}
+
+/* 3. HUD Polish */
+@keyframes hud-slide-in {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+        filter: blur(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+        filter: blur(0);
+    }
+}
+
+/* Override existing entrance with more polish if class is reapplied */
+.hud-container.active .hud-left-panel {
+    animation: hud-slide-in 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+/* 4. Sound Toggle Button Style */
+#sound-toggle {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--neon-blue);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s;
+}
+
+#sound-toggle:hover {
+    background: var(--neon-blue);
+    color: black;
+    box-shadow: 0 0 15px var(--neon-blue);
+}
+
+#sound-toggle.muted {
+    color: #cc0000;
+    border-color: #cc0000;
+    opacity: 0.6;
+}
+
+/* --- PLANET STRUCTURE VISUALIZATION (Layer 600 - Add Only) --- */
+
+.planet-structure-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 10;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
+    overflow: hidden;
+}
+
+.planet-structure-wrapper.active {
+    opacity: 1;
+}
+
+.structure-layer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    border-radius: 50%;
+    clip-path: polygon(50% -10%, 110% -10%, 110% 110%, 50% 110%);
+    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: inset 2px 2px 5px rgba(255, 255, 255, 0.2);
+    pointer-events: auto;
+    cursor: help;
+}
+
+.planet-structure-wrapper.active .structure-layer {
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.structure-layer:hover {
+    filter: brightness(1.4) saturate(1.2);
+    box-shadow: 0 0 15px currentColor;
+    z-index: 20;
+}
+
+/* Label for structure layers (Simplified) */
+.layer-tooltip {
+    position: fixed;
+    background: rgba(0, 10, 20, 0.9);
+    color: var(--neon-blue);
+    padding: 6px 12px;
+    border: 1px solid var(--neon-blue);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: bold;
+    border-radius: 4px;
+    pointer-events: none;
+    z-index: 1000;
+    transform: translate(-50%, -100%);
+    margin-top: -10px;
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+    white-space: nowrap;
+}
+
+.layer-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--neon-blue) transparent transparent transparent;
+}
+
+/* --- CORRECTIVE FIXES (Add-Only) --- */
+
+/* Reset Alignment Transition */
+#solar-system-container {
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Sun Structure Fix: Hide base visuals when showing structure */
+.sun.show-structure,
+.planet.show-structure {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Ensure structure is always circular even if planet is scaled */
+.planet-structure-wrapper {
+    background: rgba(0, 0, 0, 0.1);
+    /* Subtle hole effect */
+}
+
+/* --- FIX SUN VISIBILITY (Add-Only) --- */
+/* Ensure Sun remains visible and glowing when it is the focused object */
+body.view-focus .sun.focused-planet {
+    opacity: 1 !important;
+    filter: drop-shadow(0 0 50px #ffaa00) !important;
+    transform: translate(-50%, -50%) scale(1.5);
+    /* Slight cinematic scale boost */
+    z-index: 100 !important;
+    /* Ensure it's above the dimming layer */
+}
+
+/* Enhances the Sun's cinematic feel when focused */
+body.view-focus .sun.focused-planet::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200%;
+    height: 200%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255, 200, 0, 0.2) 0%, transparent 70%);
+    pointer-events: none;
+    animation: sun-pulse 3s infinite alternate;
+}
+
+@keyframes sun-pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.5;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+
+/* --- HOME SCREEN POLISH (Add-Only) --- */
+/* 1. Blur Background Stars initially */
+body:not(.explore-mode) .stars {
+    filter: blur(4px);
+    transform: scale(1.05);
+    /* Avoid blurred edges */
+    transition: filter 1.5s ease-out, transform 1.5s ease-out;
+}
+
+/* 2. Oval Buttons */
+.menu-btn {
+    border-radius: 50px !important;
+
+    /* Ensure transition happens smoothly when entering explore mode */
+    body.explore-mode .stars {
+        filter: blur(0);
+        transform: scale(1);
+    }
+}
+
+/* --- CYBER-SCIFI HUD STYLES (Level 700 - Add Only) --- */
+
+/* 1. Cyber Mode Container */
+.cyber-mode {
+    background: linear-gradient(135deg, rgba(0, 10, 20, 0.95), rgba(0, 30, 50, 0.8));
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    border-radius: 10px;
+    /* Slight rounding, handled by corners */
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.1), inset 0 0 30px rgba(0, 0, 0, 0.8);
+    clip-path: polygon(20px 0, 100% 0,
+            100% calc(100% - 20px), calc(100% - 20px) 100%,
+            0 100%, 0 20px);
+    overflow: hidden;
+}
+
+/* 2. Subtitle (Bintang Kerdil Fix) */
+.cyber-subtitle {
+    font-size: 0.9rem;
+    color: var(--accent-color);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: -5px;
+    opacity: 0.9;
+    padding-bottom: 10px;
+    display: block;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 1rem;
+}
+
+/* 3. Stats Grid */
+#cyber-stats-container {
+    margin: 1.5rem 0;
+    font-family: 'Rajdhani', sans-serif;
+    animation: slide-up 0.5s ease;
+}
+
+.cyber-data-header {
+    font-size: 1rem;
+    color: var(--neon-blue);
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cyber-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    border: 1px solid rgba(0, 240, 255, 0.1);
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+}
+
+.stat-row:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: #aaa;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    color: white;
+    font-weight: bold;
+    font-family: 'Orbitron', monospace;
+    font-size: 0.9rem;
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.5);
+}
+
+/* 4. Tech Frame Overlay */
+#cyber-frame-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.tech-corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--neon-blue);
+    opacity: 0.8;
+}
+
+.top-left {
+    top: 0;
+    left: 0;
+    border-right: none;
+    border-bottom: none;
+}
+
+.top-right {
+    top: 0;
+    right: 0;
+    border-left: none;
+    border-bottom: none;
+}
+
+.bottom-left {
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: none;
+}
+
+.bottom-right {
+    bottom: 0;
+    right: 0;
+    border-left: none;
+    border-top: none;
+}
+
+.tech-line-left {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 100px;
+    background: var(--neon-blue);
+    border-radius: 0 4px 4px 0;
+}
+
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}/* --- REMOVE CYBER STATS (User Request) --- */
+#cyber-stats-container {
+    display: none !important;
+}
+/* --- FIX HUD SCROLLING (User Request) --- */
+#hud-description {
+    max-height: 200px;
+    /* Limit height to prevent overlap */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+    padding-right: 10px;
+    /* Space for scrollbar */
+
+    /* Ensure formatting is preserved */
+    white-space: normal;
+}
+
+/* Custom Cyber Scrollbar */
+#hud-description::-webkit-scrollbar {
+    width: 6px;
+}
+
+#hud-description::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 3px;
+}
+
+#hud-description::-webkit-scrollbar-thumb {
+    background: var(--neon-blue);
+    border-radius: 3px;
+    box-shadow: 0 0 5px var(--neon-blue);
+}
+
+#hud-description::-webkit-scrollbar-thumb:hover {
+    background: #fff;
+}
+/* --- TIME CONTROL CONSOLIDATION (User Request) --- */
+/* Hide the standalone Year button created earlier */
+#time-speed-year {
+    display: none !important;
+}
+
+/* Ensure the main speed button looks correct */
+#time-speed {
+    min-width: 120px;
+    /* Ensure enough width for longer text */
+}
+/* --- SETTINGS & PERFORMANCE MODE (User Request) --- */
+
+/* 1. Settings Overlay / Modal */
+.settings-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: none;
+    /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.settings-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.settings-panel {
+    background: linear-gradient(135deg, rgba(10, 20, 40, 0.95), rgba(0, 10, 20, 0.98));
+    border: 1px solid var(--neon-blue);
+    padding: 2rem;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+    text-align: center;
+    position: relative;
+    clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+}
+
+.settings-title {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--neon-blue);
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    text-shadow: 0 0 10px var(--neon-blue);
+}
+
+.settings-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: #aaa;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.settings-close-btn:hover {
+    color: white;
+}
+
+/* 2. Toggle Switch */
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
+
+.setting-label {
+    color: white;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.2rem;
+    text-align: left;
+}
+
+.setting-desc {
+    font-size: 0.8rem;
+    color: #888;
+    display: block;
+    margin-top: 5px;
+}
+
+/* Toggle Switch UI */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #333;
+    transition: .4s;
+    border-radius: 30px;
+    border: 1px solid #555;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: var(--neon-blue);
+    border-color: var(--neon-blue);
+}
+
+input:checked+.slider:before {
+    transform: translateX(30px);
+    box-shadow: 0 0 10px white;
+}
+
+/* 3. LOW PERFORMANCE MODE OVERRIDES */
+body.low-perf .star {
+    animation: none !important;
+    /* Stop twinkling */
+    opacity: 0.6 !important;
+    /* Static dim stars */
+    box-shadow: none !important;
+    /* Remove glow lag */
+}
+
+body.low-perf .planet {
+    box-shadow: none !important;
+    /* Simple flat look or just remove heavy glow. 
+       Keeping basic shadow for visibility but removing complex spread. */
+    filter: none !important;
+}
+
+body.low-perf .sun {
+    animation: none !important;
+    /* Stop pulsing */
+    box-shadow: 0 0 20px #ffaa00 !important;
+    /* Simple glow */
+}
+
+body.low-perf .settings-overlay {
+    backdrop-filter: none !important;
+    background: rgba(0, 0, 0, 0.95);
+    /* Opaque fallback */
+}
+
+body.low-perf .menu-btn {
+    backdrop-filter: none !important;
+    background: rgba(0, 240, 255, 0.1);
+}

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jelajah Tata Surya - Belajar Astronomi Seru!</title>
+    <meta name="description"
+        content="Website edukasi astronomi interaktif untuk anak-anak. Jelajahi tata surya dan pelajari fakta unik tentang planet.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;600&family=Nunito:wght@400;700&family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- LAYER 1: VISUAL VIEWPORT (Visual Only, Z-Index 0) -->
+    <div id="visual-viewport">
+        <div class="stars"></div>
+        <!-- Solar System Container -->
+        <div id="solar-system-container">
+            <div class="solar-system">
+                <div class="sun" data-name="Matahari"></div>
+                <!-- Orbits & Planets -->
+                <div class="orbit orbit-mercury">
+                    <div class="planet mercury" data-name="Merkurius"></div>
+                </div>
+                <div class="orbit orbit-venus">
+                    <div class="planet venus" data-name="Venus"></div>
+                </div>
+                <div class="orbit orbit-earth">
+                    <div class="planet earth" data-name="Bumi">
+                        <div class="moon-orbit">
+                            <div class="moon"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="orbit orbit-mars">
+                    <div class="planet mars" data-name="Mars"></div>
+                </div>
+                <div class="orbit orbit-jupiter">
+                    <div class="planet jupiter" data-name="Jupiter"></div>
+                </div>
+                <div class="orbit orbit-saturn">
+                    <div class="planet saturn" data-name="Saturnus">
+                        <div class="saturn-ring"></div>
+                    </div>
+                </div>
+                <div class="orbit orbit-uranus">
+                    <div class="planet uranus" data-name="Uranus"></div>
+                </div>
+                <div class="orbit orbit-neptune">
+                    <div class="planet neptune" data-name="Neptunus"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LAYER 2: HOME UI LAYER (Intro & Menu, Z-Index 10) -->
+    <!-- This layer FADES OUT when "Start" is clicked -->
+    <div id="home-ui-layer">
+        <!-- Top Section -->
+        <header id="main-header">
+            <div class="header-content">
+                <div class="logo">🚀 AstroKids</div>
+                <h1>Jelajah Tata Surya 🌌</h1>
+            </div>
+        </header>
+
+        <!-- Home Menu (Center) -->
+        <div id="home-menu">
+            <button id="start-btn" class="menu-btn primary">
+                <span class="btn-icon">🚀</span> Mulai Petualangan
+            </button>
+            <button id="settings-btn" class="menu-btn secondary">
+                <span class="btn-icon">⚙️</span> Pengaturan
+            </button>
+        </div>
+
+        <!-- Bottom Section -->
+        <footer>
+            <p>Dibuat untuk Astronom Cilik Indonesia 🇮🇩</p>
+        </footer>
+    </div>
+
+    <!-- LAYER 2.5: SYSTEM UI LAYER (Persistent Controls, Z-Index 15) -->
+    <!-- This layer FADES IN when "explore-mode" is active -->
+    <div id="system-ui-layer">
+        <!-- Navigation -->
+        <button id="back-to-menu-btn" onclick="document.body.classList.remove('explore-mode')">🏠 Menu</button>
+
+        <!-- Time Control Panel -->
+        <div id="time-panel-container">
+            <div id="time-display">
+                <span id="current-date">12 Januari 2026</span>
+                <span id="current-time">12:00</span>
+            </div>
+
+            <div id="time-controls">
+                <button id="time-prev" class="time-btn" title="Mundur 1 Bulan">⏪</button>
+                <button id="time-play" class="time-btn" title="Mainkan/Jeda">⏯️</button>
+                <button id="time-next" class="time-btn" title="Maju 1 Bulan">⏩</button>
+
+                <div class="slider-container">
+                    <label for="time-slider">Timeline</label>
+                    <input type="range" id="time-slider" min="1900" max="2100" value="2026" step="1">
+                </div>
+
+                <button id="time-speed" class="time-btn" title="Kecepatan">1x Speed</button>
+                <button id="time-reset" class="time-btn" title="Reset ke Hari Ini">⚪</button>
+                <div class="separator" style="width:1px; height:20px; background:rgba(255,255,255,0.2);"></div>
+                <button id="sound-toggle" title="Suara On/Off">🔊</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LAYER 3: CINEMATIC HUD (Interaction, Z-Index 20) -->
+    <section id="planet-hud" class="hud-container hidden">
+        <div class="hud-left-panel">
+            <div class="hud-header">
+                <h2 id="hud-planet-name">BUMI</h2>
+                <span class="hud-subtitle">PLANET</span>
+            </div>
+            <div class="hud-menu">
+                <button class="hud-btn active" data-tab="system">
+                    <span class="btn-text">SISTEM PLANET</span><span class="btn-arrow">▶</span>
+                </button>
+                <button class="hud-btn" data-tab="encyclopedia">
+                    <span class="btn-text">ENSIKLOPEDIA</span><span class="btn-arrow">▶</span>
+                </button>
+                <button class="hud-btn" data-tab="structure">
+                    <span class="btn-text">STRUKTUR</span><span class="btn-arrow">▶</span>
+                </button>
+            </div>
+            <div class="hud-content-box">
+                <p id="hud-description">Deskripsi planet...</p>
+            </div>
+            <div class="hud-controls">
+                <button id="btn-back" class="control-btn">
+                    <div class="icon-circle">◎</div><span>SISTEM SOLAR</span>
+                </button>
+            </div>
+        </div>
+        <div class="hud-right-panel">
+            <div class="reticle-lines"></div>
+        </div>
+    </section>
+
+
+    <!-- LAYER 4: CINEMATIC SHOWCASE (Z-Index 50) -->
+    <div id="planet-showcase-layer" class="hidden">
+        <div class="showcase-content">
+            <div id="showcase-visual" class="showcase-planet">
+                <div class="showcase-texture"></div>
+                <div class="showcase-atmosphere"></div>
+                <div class="showcase-shadow"></div>
+                <div class="showcase-structure_view hidden"></div>
+            </div>
+            <h1 id="showcase-title"></h1>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
